@@ -1,10 +1,39 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import React from "react";
+import HobbyCard from "@/ui/HobbyCard";
+import { Button } from "@chakra-ui/react";
 
 export default function Home() {
+  const [hobbies, setHobbies] = React.useState<string[]>([]);
+  const [isFormOpen, setIsFormOpen] = React.useState(false);
+
+  const hobbyNameRef = React.useRef<HTMLInputElement>(null);
+
+  const addHobby = () => {
+    if (hobbyNameRef.current !== null)
+      setHobbies((prev) => [...prev, hobbyNameRef.current!.value]);
+  };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        {
+          isFormOpen && (
+            <div className={styles.form}>
+              <input type="text" placeholder="Hobby name" ref={hobbyNameRef} />
+              <Button onClick={addHobby}>Add</Button>
+            </div>
+          )
+        }
+        <Button onClick={e => setIsFormOpen(!isFormOpen)}>Create new hobby</Button>
+        {
+          hobbies.map((hobby, index) => (
+            <HobbyCard key={index} name={hobby} />
+          ))
+        }
       </main>
       <footer className={styles.footer}>
         <a
