@@ -1,5 +1,5 @@
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
-import { CardBody, CardFooter, CardHeader, CardRoot, Stack } from "@chakra-ui/react";
+import { CardRoot, Stack } from "@chakra-ui/react";
 
 export default function PostCardSkeleton() {
 
