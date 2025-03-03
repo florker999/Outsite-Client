@@ -3,14 +3,14 @@
 import 'server-only';
 import crypto from "crypto";
 import { AuthFlowType, CognitoIdentityProviderClient, ConfirmSignUpCommand, InitiateAuthCommand, SignUpCommand } from "@aws-sdk/client-cognito-identity-provider";
-import { createSession, getCookie } from '../Cookie';
+import { createSession, getSessionField } from '../Cookie';
 
 export async function signUp(username: string, password: string, email: string) {
     const signUpRes = await auth_signUp({ clientId: process.env.AUTH_CLIENT_ID, username, password, email });
     createSession({
         userSub: signUpRes.UserSub,
         session: signUpRes.Session!,
-        username,
+        username: username,
     });
 
     return ({
@@ -24,8 +24,8 @@ export async function signUp(username: string, password: string, email: string) 
 
 export async function confirmSignUp(code: string) {
 
-    const session = await getCookie('session');
-    const username = await getCookie('username');
+    const session = await getSessionField('session');
+    const username = await getSessionField('username');
 
     if (session && username) {
         const signUpRes = await auth_confirmSignUp({ clientId: process.env.AUTH_CLIENT_ID, session, code, username });

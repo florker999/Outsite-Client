@@ -1,6 +1,6 @@
 import IHobby from "@/lib/models/IHobby";
 import WithId from "@/lib/models/WithId";
-import { Button, Card, Link } from "@chakra-ui/react";
+import { Card, Link } from "@chakra-ui/react";
 
 interface IProps {
     hobby: WithId<IHobby>;

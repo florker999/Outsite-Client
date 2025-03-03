@@ -2,7 +2,7 @@
 
 import IPost from "@/lib/models/IPost"
 import WithId from "@/lib/models/WithId";
-import DbClient from "@/lib/services/DbClient";
+import DbClient from "@/lib/services/API";
 import { Button, Center, Field, Fieldset, Input, Stack } from "@chakra-ui/react";
 import React from "react"
 

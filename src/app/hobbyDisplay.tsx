@@ -1,5 +1,5 @@
-import DbClient from "@/lib/services/DbClient"
-import HobbyCard from "@/ui/HobbyCard";
+import DbClient from "@/lib/services/API"
+import HobbyCard from "@/ui/hobbyCard/HobbyCard";
 import { Text } from "@chakra-ui/react";
 
 interface IProps {

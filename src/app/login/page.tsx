@@ -1,13 +1,21 @@
 'use client'
 
 import { TDeliveryMedium } from "@/lib/models/TDeliveryMedium";
-import { createSession, deleteSession, getCookie } from "@/lib/services/Cookie";
-import DbClient from "@/lib/services/DbClient";
+import { createSession, deleteSession, getSessionField } from "@/lib/services/Cookie";
+import login from "@/lib/actions/login";
+import Form from "@/ui/Form";
 import { Button, Center, Container, Field, Fieldset, Input, Stack, Text } from "@chakra-ui/react"
 import React from "react";
+import redirect from "@/lib/actions/redirect";
+import { confirmSignUp, signup } from "@/lib/services/API";
 
 interface IProps {
 
+}
+
+interface ILoginFormData {
+    username: string,
+    password: string
 }
 
 interface IConfirmData {
@@ -21,41 +29,34 @@ export default function Page(props: IProps) {
     const [confirmData, setConfirmData] = React.useState<IConfirmData>();
 
     React.useEffect(() => {
-        'use client'
-        getCookie('username')
+        getSessionField('username')
             .then(username => {
                 setUserName(username as string | undefined);
             })
     }, []);
-
+    
     const usernameRef = React.useRef<HTMLInputElement>(null);
     const emailRef = React.useRef<HTMLInputElement>(null);
     const passwordRef = React.useRef<HTMLInputElement>(null);
     const codeRef = React.useRef<HTMLInputElement>(null);
-
-    const logIn = async () => {
-        const usernameNode = usernameRef.current,
-            passwordNode = passwordRef.current;
-        if (usernameNode && passwordNode) {
+    
+    const logIn = async (data: ILoginFormData) => {
+        if (data.username && data.password) {
             try {
-                const loginRes = await new DbClient().login(usernameNode.value, passwordNode.value);
-                if (loginRes) {
-                    setUserName(usernameNode.value);
-                    await createSession({ username: usernameNode.value })
-                    usernameNode.value = '';
-                    passwordNode.value = '';
-                }
-
+                await login(data.username, data.password);
+                //await createSession({ username: data.username });
+                //await redirect('/');
             } catch (error) {
                 console.error(error);
             }
         }
+        return false;
     }
 
     const signUp = async () => {
         if (usernameRef.current && passwordRef.current && emailRef.current) {
             try {
-                const signUpRes = await new DbClient().signUp(usernameRef.current.value, passwordRef.current.value, emailRef.current.value);
+                const signUpRes = await signup(usernameRef.current.value, passwordRef.current.value, emailRef.current.value);
                 if (signUpRes.isUserConfirmed === false)
                     setConfirmData(signUpRes.confirmation);
                 setUserName(usernameRef.current.value);
@@ -71,10 +72,9 @@ export default function Page(props: IProps) {
     const confirmCode = async () => {
         const codeNode = codeRef.current;
         if (codeNode && codeNode.value && userName) {
-            const res = await new DbClient().confirmSignUp({ code: codeNode.value });
+            const res = await confirmSignUp({ code: codeNode.value });
 
             setConfirmData(undefined);
-            createSession({ userName });
         }
     }
 
@@ -94,29 +94,29 @@ export default function Page(props: IProps) {
         )
     } else if (!isRegisterFormVisible) {
         display = (
-            <Fieldset.Root>
-                <Fieldset.Legend>Login form</Fieldset.Legend>
-                <Fieldset.Content>
-                    <Field.Root>
-                        <Field.Label>
-                            Username
-                        </Field.Label>
-                        <Input ref={usernameRef} />
-                    </Field.Root>
-                    <Field.Root>
-                        <Field.Label>
-                            <Stack>
-                                Password
-                            </Stack>
-                        </Field.Label>
-                        <Input ref={passwordRef} />
-                    </Field.Root>
-                </Fieldset.Content>
-                <Stack direction={'row'}>
-                    <Button w={100} onClick={logIn}>Login</Button>
-                    <Button w={100} onClick={() => setIsRegisterFormVisible(true)}>Register</Button>
-                </Stack>
-            </Fieldset.Root>
+            <Form<ILoginFormData>
+                title={"Login form"}
+                fields={[
+                    {
+                        title: 'Username',
+                        key: 'username'
+                    },
+                    {
+                        title: 'Password',
+                        key: 'password'
+                    }
+                ]}
+                submitButton={{
+                    title: "Login",
+                    onClick: logIn
+                }}
+                buttons={[
+                    {
+                        title: 'Register',
+                        onClick: () => setIsRegisterFormVisible(true)
+                    }
+                ]}
+            />
         )
     } else {
         if (!confirmData) {

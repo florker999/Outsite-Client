@@ -1,4 +1,4 @@
-import DbClient from "@/lib/services/DbClient"
+import DbClient from "@/lib/services/API"
 import PostCard from "@/ui/postCard/PostCard";
 import { Center, Stack, Text } from "@chakra-ui/react";
 

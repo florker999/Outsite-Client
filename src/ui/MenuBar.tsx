@@ -1,6 +1,3 @@
-import { UserNameStateContext } from "@/contexts/userId";
-import { getCookie } from "@/lib/services/Cookie";
-import { createCookieMap } from "@/server/src/utils/cookies";
 import {
     Box,
     Button,
@@ -10,6 +7,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import React from "react";
+import LogoutButton from "./LogoutButton";
 
 export default async function MenuBar(props: { userName?: string }) {
     // const { userName, setUserName } = React.useContext(UserNameStateContext);
@@ -35,6 +33,9 @@ export default async function MenuBar(props: { userName?: string }) {
                     <Link href="/login">
                         <Button>{props.userName ? `Hello, ${props.userName}` : 'Login'}</Button>
                     </Link>
+                    {props.userName &&
+                        <LogoutButton />
+                    }
                 </Stack>
             </Flex>
         </Box>

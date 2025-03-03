@@ -1,7 +1,7 @@
 'use server'
 
 import ICreatePostRequest from "@/server/src/models/ICreatePostRequest";
-import DbClient from "../services/DbClient";
+import DbClient from "../services/API";
 
 export async function addPost(data: any) {
     console.log(data);
