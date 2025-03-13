@@ -67,7 +67,10 @@ export async function getSession(): Promise<ISession> {
         if (payload)
             return payload as ISession;
     }
-    throw Error("Session field does not exist.");
+
+    console.log("Session does not exists. Creating new one...");
+    await createSession({});
+    return {};
 }
 
 export async function getSessionField(name: keyof ISession) {
