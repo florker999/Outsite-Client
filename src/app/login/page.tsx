@@ -57,6 +57,7 @@ export default function Page(props: IProps) {
                             title: 'Password',
                             key: 'password',
                             invalid: !!loginState.message,
+                            type: 'password'
                         }
                     ]}
                     submitButtonTitle='Login'
@@ -85,7 +86,7 @@ export default function Page(props: IProps) {
         } else if (signupState.destination && signupState.medium) {
             display = (
                 <Form
-                    title={`An email has been sent to you at ${signupState.destination}. Don't hesitate too long and enter the code from the message below.`}
+                    title={`An email has been sent to you at ${signupState.destination}. Don't hesitate too long & enter the code from the message in the field below.`}
                     fields={[
                         {
                             title: 'Code',
