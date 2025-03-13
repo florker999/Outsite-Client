@@ -12,6 +12,7 @@ export default function NewHobbyCard(props: IProps) {
             size={'md'}
             variant={'subtle'}
             w={300}
+            h={100}
             onClick={props.onClick}
             _hover={{ cursor: 'pointer' }}
         >

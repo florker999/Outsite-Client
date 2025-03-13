@@ -21,7 +21,7 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
       endElementProps,
       children,
       startOffset = "6px",
-      endOffset = "6px",
+      endOffset = "-10px",
       ...rest
     } = props
 
@@ -43,7 +43,7 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
           ...children.props,
         })}
         {endElement && (
-          <InputElement placement="end" {...endElementProps}>
+          <InputElement placement="end" {...endElementProps} pr={4}>
             {endElement}
           </InputElement>
         )}

@@ -10,5 +10,6 @@ export default async function del(path: string) {
     return fetch(Consts.apiUrl + path, {
         method: 'DELETE',
         credentials: 'include',
+        headers,
     })
 }

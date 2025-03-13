@@ -10,28 +10,19 @@ import React from "react";
 import LogoutButton from "./LogoutButton";
 
 export default async function MenuBar(props: { userName?: string }) {
-    // const { userName, setUserName } = React.useContext(UserNameStateContext);
-
-    // React.useEffect(() => {
-    //     const cookieMap = createCookieMap(document.cookie);
-    //     const userId = cookieMap.get('userName');
-    //     setUserName(userId);
-    // }, []);
-
     return (
         <Box bg="gray.800" px={4}>
             <Flex h={16} alignItems="center" justifyContent="space-between">
-                <Text color="white">Outsite</Text>
+                <Link href="/">
+                    <Text color="white">Outsite</Text>
+                </Link>
                 <Stack direction={{ base: "column", md: "row" }}>
                     <Link href="/">
-                        <Button>Hobbies</Button>
+                        <Button padding={5}>Hobbies</Button>
                     </Link>
-                    <Link href="/posts">
-                        <Button>Posts</Button>
-                    </Link>
-                    <Button>Profile</Button>
+                    <Button padding={5}>Profile</Button>
                     <Link href="/login">
-                        <Button>{props.userName ? `Hello, ${props.userName}` : 'Login'}</Button>
+                        <Button padding={5}>{props.userName ? `Hello, ${props.userName}` : 'Login'}</Button>
                     </Link>
                     {props.userName &&
                         <LogoutButton />

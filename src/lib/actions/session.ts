@@ -1,5 +1,7 @@
 'use server'
 
+import { getSessionField } from "../services/Cookie";
+
 var dbUrl: string = "http://localhost:3001";
 
 export default async function getSessionSID() {
@@ -10,13 +12,28 @@ export default async function getSessionSID() {
     });
 
     if (response.ok) {
-        const setCookies = response.headers.getSetCookie();
-        const sidCookie = readSIDCookie(setCookies);
-        const decodedSidCookiet = decodeURIComponent(sidCookie);
-        //const sid = readSIDFromCookie(decodeURIComponent(sidCookie));
-        console.log("Read sid: " + decodedSidCookiet);
-        return decodedSidCookiet;
+        const decodedSidCookie = getSIDFromResponse(response);
+        console.log("Read sid: " + decodedSidCookie);
+        return decodedSidCookie;
     } else throw new Error("Failed to call session endpoint.");
+}
+
+export async function checkLocalAndResponseSIDsEqual(response:Response) {
+    const localSid = (await getSessionField('sid') as string),
+    responseSid = getSIDFromResponse(response);
+    
+    console.log("Checking for sids equality.");
+    console.log("Local sid: " + localSid);
+    console.log("Response sid: " + responseSid);
+
+    return localSid === responseSid;
+}
+
+function getSIDFromResponse(response: Response) {
+    const setCookies = response.headers.getSetCookie();
+    const sidCookie = readSIDCookie(setCookies);
+    const decodedSidCookie = decodeURIComponent(sidCookie);
+    return decodedSidCookie;
 }
 
 function readSIDCookie(cookies: string[]) {
@@ -36,16 +53,4 @@ function readSIDCookie(cookies: string[]) {
     }
 
     throw new Error("SID cookie not found in cookies: " + cookies.toString());
-}
-
-function readSIDFromCookie(cookie: string) {
-    const cookieStart = 's:',
-        cookieEnd = '.';
-
-    const cookieStartIndex = cookie.indexOf(cookieStart),
-        cookieEndIndex = cookie.indexOf(cookieEnd);
-    if (cookieStartIndex !== -1 && cookieEndIndex !== -1)
-        return cookie.slice(cookieStartIndex + cookieStart.length, cookieEndIndex + cookieEnd.length);
-    else
-        throw new Error("Cookie cannot be found.");
 }

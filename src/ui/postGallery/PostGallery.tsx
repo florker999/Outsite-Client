@@ -6,6 +6,7 @@ import React, { Suspense } from "react"
 import Form from "../Form";
 import PostCard from "../postCard/PostCard";
 import WithId from "@/lib/models/WithId";
+import NewPostDialog from "../NewPostDialog";
 
 interface IProps {
     posts: Promise<WithId<IPost>[]>
@@ -19,23 +20,7 @@ export default function PostGallery(props: IProps) {
         <Stack>
             <Button onClick={() => setIsFormVisible(value => !value)}>Add</Button>
             {isFormVisible &&
-                <Form
-                    title="New post"
-                    fields={[
-                        {
-                            title: "Title",
-                            key: "title"
-                        },
-                        {
-                            title: "Content",
-                            key: "content"
-                        }
-                    ]}
-                    submitButton={{
-                        onClick: () => Promise.resolve(true),
-                        title: 'Check'
-                    }}
-                />
+                <NewPostDialog close={() => setIsFormVisible(false)} />
             }
             {posts.map(post => (
                 <PostCard key={post._id} post={post} />

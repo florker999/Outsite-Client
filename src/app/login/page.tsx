@@ -1,21 +1,20 @@
 'use client'
 
 import { TDeliveryMedium } from "@/lib/models/TDeliveryMedium";
-import { createSession, deleteSession, getSessionField } from "@/lib/services/Cookie";
-import login from "@/lib/actions/login";
 import Form from "@/ui/Form";
-import { Button, Center, Container, Field, Fieldset, Input, Stack, Text } from "@chakra-ui/react"
+import { Alert, Center, Container, Text } from "@chakra-ui/react"
 import React from "react";
-import redirect from "@/lib/actions/redirect";
-import { confirmSignUp, signup } from "@/lib/services/API";
+import { handleSignUpForm } from "@/lib/actions/handleSignUpForm";
+import { handleLogInForm } from "@/lib/actions/handleLogInForm";
+import ILoginForm from "@/lib/models/forms/loginForm";
+import IFormState from "../../lib/models/IFormState";
+import { CloseButton } from "@/components/ui/close-button";
+import ISignupFormState from "@/lib/models/ISignupFormState";
+import { handleConfirmForm } from "@/lib/actions/handleConfirmForm";
+import RegisterForm from "@/ui/RegisterForm";
 
 interface IProps {
 
-}
-
-interface ILoginFormData {
-    username: string,
-    password: string
 }
 
 interface IConfirmData {
@@ -24,159 +23,89 @@ interface IConfirmData {
 }
 
 export default function Page(props: IProps) {
-    const [userName, setUserName] = React.useState<string>();
     const [isRegisterFormVisible, setIsRegisterFormVisible] = React.useState(false);
-    const [confirmData, setConfirmData] = React.useState<IConfirmData>();
-
-    React.useEffect(() => {
-        getSessionField('username')
-            .then(username => {
-                setUserName(username as string | undefined);
-            })
-    }, []);
-    
-    const usernameRef = React.useRef<HTMLInputElement>(null);
-    const emailRef = React.useRef<HTMLInputElement>(null);
-    const passwordRef = React.useRef<HTMLInputElement>(null);
-    const codeRef = React.useRef<HTMLInputElement>(null);
-    
-    const logIn = async (data: ILoginFormData) => {
-        if (data.username && data.password) {
-            try {
-                await login(data.username, data.password);
-                //await createSession({ username: data.username });
-                //await redirect('/');
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        return false;
-    }
-
-    const signUp = async () => {
-        if (usernameRef.current && passwordRef.current && emailRef.current) {
-            try {
-                const signUpRes = await signup(usernameRef.current.value, passwordRef.current.value, emailRef.current.value);
-                if (signUpRes.isUserConfirmed === false)
-                    setConfirmData(signUpRes.confirmation);
-                setUserName(usernameRef.current.value);
-                document.cookie = "userName=" + usernameRef.current.value;
-
-            } catch (error) {
-                console.error("Failed to create enthusiast: ", error);
-
-            }
-        }
-    };
-
-    const confirmCode = async () => {
-        const codeNode = codeRef.current;
-        if (codeNode && codeNode.value && userName) {
-            const res = await confirmSignUp({ code: codeNode.value });
-
-            setConfirmData(undefined);
-        }
-    }
-
-    const logOut = () => {
-        deleteSession();
-        setUserName(undefined);
-    }
+    const [loginState, loginAction, isLoginPending] = React.useActionState<IFormState, FormData>(handleLogInForm, { message: '', formData: new FormData() });
+    const [signupState, signupAction, isSignupPending] = React.useActionState<ISignupFormState, FormData>(handleSignUpForm, { message: '', formData: new FormData() });
+    const [confirmState, confirmAction, isConfirmPending] = React.useActionState<IFormState, FormData>(handleConfirmForm, { message: '', formData: new FormData() });
 
     let display;
 
-    if (userName && !confirmData) {
+    if (!isRegisterFormVisible) {
         display = (
             <>
-                <Text>Already logged in.</Text>
-                <Button onClick={logOut}>Logout</Button>
+                {loginState.message &&
+                    <Alert.Root status={'error'} padding={5}>
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title fontWeight={'bold'}>{loginState.message}</Alert.Title>
+                            <Alert.Description>
+                                {loginState.message}
+                            </Alert.Description>
+                        </Alert.Content>
+                        <CloseButton />
+                    </Alert.Root>
+                }
+                <Form<ILoginForm>
+                    title={"Login form"}
+                    fields={[
+                        {
+                            title: 'Username',
+                            key: 'username',
+                            invalid: !!loginState.message,
+                        },
+                        {
+                            title: 'Password',
+                            key: 'password',
+                            invalid: !!loginState.message,
+                        }
+                    ]}
+                    submitButtonTitle='Login'
+                    formAction={loginAction}
+                    disabled={isLoginPending}
+                    formData={loginState.formData}
+                    buttons={[
+                        {
+                            title: 'Register',
+                            onClick: () => setIsRegisterFormVisible(true)
+                        }
+                    ]}
+                />
             </>
         )
-    } else if (!isRegisterFormVisible) {
-        display = (
-            <Form<ILoginFormData>
-                title={"Login form"}
-                fields={[
-                    {
-                        title: 'Username',
-                        key: 'username'
-                    },
-                    {
-                        title: 'Password',
-                        key: 'password'
-                    }
-                ]}
-                submitButton={{
-                    title: "Login",
-                    onClick: logIn
-                }}
-                buttons={[
-                    {
-                        title: 'Register',
-                        onClick: () => setIsRegisterFormVisible(true)
-                    }
-                ]}
-            />
-        )
     } else {
-        if (!confirmData) {
+        if (!signupState.destination && !signupState.medium) {
             display = (
-                <Fieldset.Root>
-                    <Fieldset.Legend>Register form</Fieldset.Legend>
-                    <Fieldset.Content>
-                        <Field.Root>
-                            <Field.Label>
-                                Email
-                            </Field.Label>
-                            <Input ref={emailRef} />
-                        </Field.Root>
-                        <Field.Root>
-                            <Field.Label>
-                                Username
-                            </Field.Label>
-                            <Input ref={usernameRef} />
-                        </Field.Root>
-                        <Field.Root>
-                            <Field.Label>
-                                <Stack>
-                                    Password
-                                    <Field.HelperText>Make sure it's secure.</Field.HelperText>
-                                </Stack>
-                            </Field.Label>
-                            <Input ref={passwordRef} />
-                        </Field.Root>
-                    </Fieldset.Content>
-                    <Stack direction={'row'}>
-                        <Button w={100} onClick={() => setIsRegisterFormVisible(false)}>Back</Button>
-                        <Button w={100} onClick={signUp}>Register</Button>
-                    </Stack>
-                </Fieldset.Root>
+                <RegisterForm
+                    signupState={signupState}
+                    signupAction={signupAction}
+                    isSignupPending={isSignupPending}
+                    closeForm={() => setIsRegisterFormVisible(false)}
+                />
             )
-
+        } else if (signupState.destination && signupState.medium) {
+            display = (
+                <Form
+                    title={`An email has been sent to you at ${signupState.destination}. Don't hesitate too long and enter the code from the message below.`}
+                    fields={[
+                        {
+                            title: 'Code',
+                            key: 'code',
+                            required: true,
+                            disabled: isConfirmPending,
+                        }
+                    ]}
+                    submitButtonTitle={"Send code"}
+                    formAction={confirmAction}
+                />
+            )
         } else {
-            display = (
-                <Fieldset.Root>
-                    <Fieldset.Legend>Confirm form</Fieldset.Legend>
-                    <Fieldset.HelperText>Enter your code sent as {confirmData.medium} to {confirmData.destination}.</Fieldset.HelperText>
-                    <Fieldset.Content>
-                        <Field.Root>
-                            <Field.Label>
-                                Code
-                            </Field.Label>
-                            <Input ref={codeRef} />
-                        </Field.Root>
-                    </Fieldset.Content>
-                    <Stack direction={'row'}>
-                        <Button w={100} onClick={confirmCode}>Send code</Button>
-                    </Stack>
-                </Fieldset.Root>
-            )
+            display = <Text>Error</Text>
         }
     }
 
     return (
         <Center>
-            <Container maxW={600}>
+            <Container maxW={600} mt={15}>
                 {display}
             </Container>
         </Center>

@@ -1,85 +1,141 @@
 'use client'
 
-import { Fieldset, Field, Input, Stack, Button, Container } from "@chakra-ui/react";
-import React, { JSX, RefObject } from "react";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Fieldset, Field, Input, Stack, Button, Container, FieldErrorText, RadioCard, For, HStack } from "@chakra-ui/react";
+import React, { JSX } from "react";
 
-interface IField<FormData> {
+interface IRadioChoices {
+    value: string,
+    element: React.JSX.Element,
+}
+
+type TFieldType = 'text' | 'password' | 'radio';
+interface IGeneralField<FormStructure> {
     title: string,
-    key: keyof FormData & string,
+    key: keyof FormStructure & string,
+    value?: string,
+    invalid?: boolean,
+    invalidText?: string,
+    required?: boolean,
+    disabled?: boolean,
+    type?: TFieldType,
 }
 
-interface IRefField<FormData> extends IField<FormData> {
-    ref: RefObject<HTMLInputElement | null>
+interface IRadioField<FormStructure> extends IGeneralField<FormStructure> {
+    type: 'radio',
+    choices: IRadioChoices[],
+    defaultChoice?: string,
 }
+
+interface IField<FormStructure> extends IGeneralField<FormStructure> {
+    type?: 'text' | 'password'
+}
+
+type TField<FormStructure> = IField<FormStructure> | IRadioField<FormStructure>
 
 interface IButton {
     title: string,
     onClick(): any,
 }
 
-interface IProps<FormData> {
+interface IProps<FormStructure> {
     children?: JSX.Element,
     title: string,
     description?: string,
-    fields: IField<FormData>[],
-    submitButton: { title: string, onClick: (data: FormData) => Promise<boolean> },
-    buttons?: IButton[]
+    fields: TField<FormStructure>[],
+    submitButtonTitle: string,
+    buttons?: IButton[],
+    formAction: string | ((formData: FormData) => void | Promise<void>),
+    disabled?: boolean,
+    formData?: FormData,
 }
 
-export default function Form<FormData>(props: IProps<FormData>) {
-    const { title, description, fields, submitButton, buttons } = props;
-    const fieldRefs = fields.map<IRefField<FormData>>(field => ({
-        ...field,
-        ref: React.useRef<HTMLInputElement>(null)
-    }));
-
-    const sendData = async () => {
-        const o: any = {};
-        for (const fieldRef of fieldRefs) {
-            if (fieldRef.ref.current)
-                o[fieldRef.key] = fieldRef.ref.current.value;
-        }
-        const res: boolean = await props.submitButton.onClick(o);
-        if (res) {
-            for (const fieldRef of fieldRefs) {
-                if (fieldRef.ref.current)
-                    fieldRef.ref.current.value = '';
-            }
-        }
-    }
+export default function Form<FormStructure>(props: IProps<FormStructure>) {
+    const { title, description, fields, submitButtonTitle, buttons, formAction, disabled } = props;
 
     return (
         <Container padding={5}>
-            <Fieldset.Root >
+            <Fieldset.Root disabled={disabled}>
                 <Fieldset.Legend fontWeight={'bold'} fontSize={'2xl'}>{title}</Fieldset.Legend>
                 {description &&
                     <Fieldset.HelperText>{description}</Fieldset.HelperText>
                 }
-                <Fieldset.Content mt={5}>
-                    {fieldRefs.map(field => (
-                        <Field.Root key={field.key}>
-                            <Field.Label>{field.title}</Field.Label>
-                            <Input ref={field.ref} />
-                        </Field.Root>
-                    ))}
-                </Fieldset.Content>
-                <Stack direction={'row'} mt={5}>
-                    <Button
-                        w={100}
-                        onClick={sendData}
-                    >
-                        {submitButton.title}
-                    </Button>
-                    {buttons?.map((button, i) => (
+                <form action={formAction}>
+                    <Fieldset.Content mt={5}>
+                        {fields.map(field => (
+                            <Field.Root
+                                key={field.key}
+                                invalid={field.invalid}
+                                required={field.required}
+                                disabled={field.disabled}
+                            >
+                                <Field.Label>
+                                    {field.title}
+                                    {field.required &&
+                                        <Field.RequiredIndicator />
+                                    }
+                                </Field.Label>
+                                {field.type === 'password' ?
+                                    <PasswordInput
+                                        name={field.key}
+                                        defaultValue={field.value}
+                                        padding={3}
+                                    />
+                                    :
+                                    field.type === 'radio' ?
+                                        <RadioCard.Root
+                                            defaultValue={field.defaultChoice || field.choices[0]?.value}
+                                            name={field.key}
+                                        >
+                                            <HStack>
+                                                <For each={field.choices}>
+                                                    {(choice) => (
+                                                        <RadioCard.Item value={choice.value}>
+                                                            <RadioCard.ItemHiddenInput />
+                                                            <RadioCard.ItemControl>
+                                                                <RadioCard.ItemContent>
+                                                                    {choice.element}
+                                                                </RadioCard.ItemContent>
+                                                            </RadioCard.ItemControl>
+                                                        </RadioCard.Item>
+                                                    )}
+                                                </For>
+                                            </HStack>
+                                        </RadioCard.Root>
+                                        :
+                                        <Input
+                                            name={field.key}
+                                            defaultValue={field.value || props.formData?.get(field.key)?.toString()}
+                                            type={field.type}
+                                            padding={3}
+                                        />
+                                }
+                                {field.invalidText &&
+                                    <FieldErrorText>{field.invalidText}</FieldErrorText>
+                                }
+                            </Field.Root>
+                        ))}
+                    </Fieldset.Content>
+                    <Stack direction={'row'} mt={5}>
                         <Button
-                            w={100}
-                            onClick={button.onClick}
-                            key={i}
+                            w={'auto'}
+                            type='submit'
+                            p={5}
                         >
-                            {button.title}
+                            {submitButtonTitle}
                         </Button>
-                    ))}
-                </Stack>
+                        {buttons?.map((button, i) => (
+                            <Button
+                                w={'auto'}
+                                onClick={button.onClick}
+                                key={i}
+                                p={5}
+                            >
+                                {button.title}
+                            </Button>
+                        ))}
+                    </Stack>
+                </form>
             </Fieldset.Root>
         </Container>
     )

@@ -19,10 +19,8 @@ export default function PostCard(props: IProps) {
             <CardBody>
                 <Text>{post.content}</Text>
             </CardBody>
-            <CardFooter>
-                <Link href={`/hobbies/${post.hobbyId}/posts/${post._id}`}>
-                    <Button>View more</Button>
-                </Link>
+            <CardFooter mt={5}>
+                <Button p={4}>View more</Button>
             </CardFooter>
         </CardRoot>
     );

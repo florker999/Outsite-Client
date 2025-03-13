@@ -12,7 +12,7 @@ export default function LogoutButton() {
     }
 
     return (
-        <Button onClick={logout}>
+        <Button onClick={logout} padding={5}>
             <LuLogOut />
         </Button>
 

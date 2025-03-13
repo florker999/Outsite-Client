@@ -10,6 +10,9 @@ const encodedKey = new TextEncoder().encode(secretKey)
 interface ISession {
     username?: string,
     sid?: string,
+    isLoggedIn?: boolean,
+    session?: string,
+    userSub?: string,
 }
 
 export async function encrypt(payload: any) {
@@ -44,8 +47,7 @@ export async function createSession(payload: ISession) {
 }
 
 export async function deleteSession(): Promise<undefined> {
-    const cookieStore = await cookies()
-    cookieStore.delete('session');
+    await createSession({});
 }
 
 export async function updateSession(payload: Partial<ISession>) {
@@ -54,22 +56,21 @@ export async function updateSession(payload: Partial<ISession>) {
         ...session,
         ...payload
     };
-    createSession(nextSession);
+    await createSession(nextSession);
 }
 
-export async function getSession(): Promise<ISession | undefined> {
+export async function getSession(): Promise<ISession> {
     const cookieStore = await cookies();
     const encryptedCookie = cookieStore.get('session');
     if (encryptedCookie) {
         const payload = await decrypt(encryptedCookie.value);
         if (payload)
             return payload as ISession;
-    } else {
-        console.log("Session field does not exist.");
     }
+    throw Error("Session field does not exist.");
 }
 
-export async function getSessionField(name: string) {
+export async function getSessionField(name: keyof ISession) {
     const cookieStore = await cookies();
     const encryptedCookie = cookieStore.get('session');
     if (encryptedCookie) {
