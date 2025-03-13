@@ -20,10 +20,7 @@ export default async function MenuBar(props: { userName?: string }) {
                     <Link href="/">
                         <Button padding={5}>Hobbies</Button>
                     </Link>
-                    <Button padding={5}>Profile</Button>
-                    <Link href="/login">
-                        <Button padding={5}>{props.userName ? `Hello, ${props.userName}` : 'Login'}</Button>
-                    </Link>
+                    <Button padding={5} cursor={'default'}>{props.userName ? `Hello, ${props.userName}` : 'Login'}</Button>
                     {props.userName &&
                         <LogoutButton />
                     }
