@@ -1,8 +1,7 @@
 'use server'
 
-import ICreateHobbyRequest from "@/server/src/models/ICreateHobbyRequest";
+import ICreateTrophyRequest from "@/lib/models/ICreateTrophyRequest";
 import post from "../fetchMethods/post";
-import ICreateTrophyRequest from "@/server/src/models/ICreateTrophyRequest";
 
 interface INewTrophy {
     title: string,

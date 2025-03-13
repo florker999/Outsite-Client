@@ -2,7 +2,7 @@
 
 import { getSessionField } from "../services/Cookie";
 
-var dbUrl: string = "http://localhost:3001";
+const dbUrl: string = "http://localhost:3001";
 
 export default async function getSessionSID() {
     console.log('Server Action - Get Session SID');

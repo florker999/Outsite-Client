@@ -1,12 +1,12 @@
 'use server'
 
-import { IConfirmSignUpRequest } from "@/server/src/models/IConfirmSignUpRequest";
 import { ISignUpResponse } from "../models/ISignUpResponse";
 import post from "./fetchMethods/post";
 import { getSession, updateSession } from "../services/Cookie";
 import ISignUpRequest from "../models/ISignUpRequest";
-import ISignupResponse from "@/server/src/models/ISignupResponse";
 import { TDeliveryMedium } from "../models/TDeliveryMedium";
+import ISignupResponse from "../models/ISignupResponse copy";
+import { IConfirmSignUpRequest } from "../models/IConfirmSignUpRequest";
 
 export async function signup(data: ISignUpRequest): Promise<ISignUpResponse> {
     const signUpRes = await post('/signUp', data);
@@ -32,10 +32,10 @@ export async function signup(data: ISignUpRequest): Promise<ISignUpResponse> {
     } else throw new Error("Failed to sign up.");
 }
 
-export async function confirmSignUp(request: IConfirmSignUpRequest): Promise<boolean> {
+export async function confirmSignUp(code: string): Promise<boolean> {
     const { username, session } = await getSession();
     const confirmationRequest = {
-        ...request,
+        code,
         username,
         session
     }

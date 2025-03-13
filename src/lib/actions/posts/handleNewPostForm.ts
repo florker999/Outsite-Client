@@ -3,9 +3,9 @@
 import validateForm from "../../utils/validateForm";
 import INewPostState from "@/lib/models/INewPostFormState";
 import { INewPostForm } from "@/ui/NewPostForm";
-import ICreatePostRequest from "@/server/src/models/ICreatePostRequest";
 import { addPost } from "./addPost";
 import { revalidatePath } from "next/cache";
+import ICreatePostRequest from "@/lib/models/ICreatePostRequest";
 
 export async function handleNewPostForm(prevState: INewPostState, formData: FormData, hobbyId: string): Promise<INewPostState> {
     console.log("Server Action - Validate New Post Form");

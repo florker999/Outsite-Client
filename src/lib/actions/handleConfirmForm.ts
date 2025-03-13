@@ -17,7 +17,7 @@ export async function handleConfirmForm(prevState: IFormState, formData: FormDat
     if (formIsValid) {
         const confirmForm: IConfirmForm = extractFormFields(formData);
         try {
-            const confirmRes = await confirmSignUp(confirmForm);
+            const confirmRes = await confirmSignUp(confirmForm.code);
             await updateSession({ isLoggedIn: true });
 
         } catch (error) {

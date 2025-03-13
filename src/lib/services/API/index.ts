@@ -1,12 +1,12 @@
 'use server'
 
+import { IConfirmSignUpRequest } from "@/lib/models/IConfirmSignUpRequest";
+import ICreateHobbyRequest from "@/lib/models/ICreateHobbyRequest";
+import ICreatePostRequest from "@/lib/models/ICreatePostRequest";
 import IHobby from "@/lib/models/IHobby";
 import IPost from "@/lib/models/IPost";
 import { ISignUpResponse } from "@/lib/models/ISignUpResponse";
 import WithId from "@/lib/models/WithId";
-import { IConfirmSignUpRequest } from "@/server/src/models/IConfirmSignUpRequest";
-import ICreateHobbyRequest from "@/server/src/models/ICreateHobbyRequest";
-import ICreatePostRequest from "@/server/src/models/ICreatePostRequest";
 
 const dbUrl: string = "http://localhost:3001";
 

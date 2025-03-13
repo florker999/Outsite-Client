@@ -1,6 +1,6 @@
 'use server'
 
-import ICreatePostRequest from "@/server/src/models/ICreatePostRequest";
+import ICreatePostRequest from "@/lib/models/ICreatePostRequest";
 import post from "../fetchMethods/post";
 
 export async function addPost(request: ICreatePostRequest) {

@@ -2,10 +2,8 @@
 
 import validateForm from "../../utils/validateForm";
 import { addTrophy } from "./addTrophy";
-import { revalidatePath } from "next/cache";
 import IFormState from "@/lib/models/IFormState";
 import { ITrophyForm, TTrophyIcon } from "@/ui/TrophiesGallery";
-import ICreateTrophyRequest from "@/server/src/models/ICreateTrophyRequest";
 import WithId from "@/lib/models/WithId";
 import ITrophy from "@/lib/models/ITrophy";
 

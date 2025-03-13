@@ -2,7 +2,7 @@
 
 import { getSessionField } from "@/lib/services/Cookie";
 import post from "../fetchMethods/post";
-import ICreateHobbyRequest from "@/server/src/models/ICreateHobbyRequest";
+import ICreateHobbyRequest from "@/lib/models/ICreateHobbyRequest";
 
 
 export async function addHobby(request: ICreateHobbyRequest): Promise<string> {

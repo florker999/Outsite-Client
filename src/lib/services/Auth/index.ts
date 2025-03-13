@@ -28,8 +28,8 @@ export async function confirmSignUp(code: string) {
     const username = await getSessionField('username');
 
     if (session && username) {
-        const signUpRes = await auth_confirmSignUp({ clientId: process.env.AUTH_CLIENT_ID, session, code, username });
-        const loginRes = await auth_initiateAuth({ clientId: process.env.AUTH_CLIENT_ID, session: signUpRes.Session, username, password: '' });
+        // const signUpRes = await auth_confirmSignUp({ clientId: process.env.AUTH_CLIENT_ID, session, code, username });
+        // const loginRes = await auth_initiateAuth({ clientId: process.env.AUTH_CLIENT_ID, session: signUpRes.Session, username, password: '' });
     }
 
     // set session
