@@ -76,6 +76,9 @@ export default async function Page(props: IProps) {
                     </InfoHeading>
                 </Container>
                 <Separator />
+                <Center mt={2} gap={5}>
+                    <Text textStyle={'2xl'}>Trophies</Text>
+                </Center>
                 <TrophiesGallery
                     trophies={trophies}
                     hobbyId={hobbyId}

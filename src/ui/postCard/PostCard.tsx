@@ -3,7 +3,8 @@ import WithId from "@/lib/models/WithId";
 import { Button, CardBody, CardFooter, CardHeader, CardRoot, CardTitle, Link, Text } from "@chakra-ui/react";
 
 interface IProps {
-    post: WithId<IPost>;
+    post: WithId<IPost>,
+    open(): any,
 }
 
 export default function PostCard(props: IProps) {
@@ -20,7 +21,7 @@ export default function PostCard(props: IProps) {
                 <Text>{post.content}</Text>
             </CardBody>
             <CardFooter mt={5}>
-                <Button p={4}>View more</Button>
+                <Button p={4} onClick={props.open}>View more</Button>
             </CardFooter>
         </CardRoot>
     );
