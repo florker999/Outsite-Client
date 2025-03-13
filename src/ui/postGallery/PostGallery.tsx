@@ -8,6 +8,8 @@ import PostCard from "../postCard/PostCard";
 import WithId from "@/lib/models/WithId";
 import NewPostDialog from "../NewPostDialog";
 import PostDialog from "../PostDialog";
+import { removePost } from "@/lib/actions/posts/removePost";
+import { revalidatePath } from "next/cache";
 
 interface IProps {
     posts: Promise<WithId<IPost>[]>
@@ -17,6 +19,18 @@ export default function PostGallery(props: IProps) {
     const posts = React.use(props.posts);
     const [isFormVisible, setIsFormVisible] = React.useState(false);
     const [selectedPostIndex, setSelectedPostIndex] = React.useState<number>();
+
+    const removePostHandler = async (postIndex: number) => {
+        const selectedPost = posts[postIndex];
+
+        try {
+            await removePost(selectedPost._id);
+            setSelectedPostIndex(undefined);
+            
+        } catch (error) {
+            console.log("Failed to remove the post.");
+        }
+    }
 
     return (
         <>
@@ -39,6 +53,7 @@ export default function PostGallery(props: IProps) {
                 <PostDialog
                     post={posts[selectedPostIndex]}
                     close={() => setSelectedPostIndex(undefined)}
+                    remove={() => removePostHandler(selectedPostIndex)}
                 />
             }
         </>
