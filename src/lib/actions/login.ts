@@ -3,7 +3,7 @@
 import { updateSession } from "../services/Cookie";
 import post from "./fetchMethods/post";
 import ILoginForm from "../models/forms/loginForm";
-import ILoginResponse from "@/server/src/models/ILoginResponse";
+import ILoginResponse from "../models/ILoginResponse";
 
 export default async function login(data: ILoginForm) {
     console.log("Server Action - Login");
