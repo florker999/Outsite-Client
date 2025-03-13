@@ -8,8 +8,6 @@ import { LuBicepsFlexed, LuBike, LuBook, LuCookingPot, LuFlag, LuPlane, LuPlus, 
 import Dialog from "./Dialog";
 import NewTrophyForm from "./NewTrophyForm";
 import { handleNewTrophyForm } from "@/lib/actions/trophies/handleNewTrophyForm";
-import { deleteTrophy } from "@/lib/actions/trophies/deleteTrophy";
-import { revalidatePath } from "next/cache";
 
 export interface ITrophyForm {
     title: string,
@@ -30,7 +28,8 @@ export default function TrophiesGallery(props: IGalleryProps) {
     const trophies = React.use(props.trophies);
 
     const removeHandler = async (selectedAchievementIndex: number) => {
-        await props.removeTrophy(trophies[selectedAchievementIndex]._id);
+        const selectedTrophy = trophies[selectedAchievementIndex];
+        await props.removeTrophy(selectedTrophy._id);
         setSelectedAchievementIndex(undefined);
     }
 

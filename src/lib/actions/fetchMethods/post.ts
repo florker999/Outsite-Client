@@ -14,6 +14,6 @@ export default async function post(path: string, body: any): Promise<Response> {
         method: 'POST',
         credentials: 'include',
         headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
     })
 }
