@@ -1,6 +1,6 @@
-const consts = {
-    apiUrl: "https://51.20.63.174:3001"
+const Consts = {
+    apiUrl: "http://51.20.63.174:3001"
     // apiUrl: "http://localhost:3001"
 }
 
-export default consts;
+export default Consts;

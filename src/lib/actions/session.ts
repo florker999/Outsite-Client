@@ -1,13 +1,12 @@
 'use server'
 
 import { getSessionField } from "../services/Cookie";
-
-const dbUrl: string = "http://localhost:3001";
+import Consts from "../actions/fetchMethods/Consts";
 
 export default async function getSessionSID() {
     console.log('Server Action - Get Session SID');
-    
-    const response = await fetch(dbUrl + '/session', {
+
+    const response = await fetch(Consts.apiUrl + '/session', {
         method: 'GET'
     });
 
@@ -18,10 +17,10 @@ export default async function getSessionSID() {
     } else throw new Error("Failed to call session endpoint.");
 }
 
-export async function checkLocalAndResponseSIDsEqual(response:Response) {
+export async function checkLocalAndResponseSIDsEqual(response: Response) {
     const localSid = (await getSessionField('sid') as string),
-    responseSid = getSIDFromResponse(response);
-    
+        responseSid = getSIDFromResponse(response);
+
     console.log("Checking for sids equality.");
     console.log("Local sid: " + localSid);
     console.log("Response sid: " + responseSid);
