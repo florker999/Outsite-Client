@@ -17,43 +17,39 @@ export default function RegisterForm(props: IProps) {
     return (
         <Form<ISignupForm>
             title='Sign up form'
+            submitButtonTitle="Create account"
+            formAction={signupAction}
+            formData={signupState.formData}
+            disabled={isSignupPending}
             fields={[
                 {
                     title: 'Email',
                     key: 'email',
                     required: true,
-                    disabled: isSignupPending,
-                    value: signupState.formData.get('email')?.toString()
                 },
                 {
                     title: 'Username',
                     key: 'username',
                     required: true,
-                    disabled: isSignupPending,
-                    value: signupState.formData.get('email')?.toString()
+                    invalid: signupState.doesUsernameExists,
+                    invalidText: signupState.doesUsernameExists ? "This username is not available." : ''
                 },
                 {
                     title: 'Password',
                     key: 'password',
                     required: true,
-                    disabled: isSignupPending,
                     type: 'password',
                     invalid: signupState.arePasswordsDifferent,
-                    invalidText: 'The password is different',
-                    value: signupState.formData.get('email')?.toString()
                 },
                 {
                     title: 'Confirm password',
                     key: 'confirmPassword',
                     required: true,
-                    disabled: isSignupPending,
                     type: 'password',
-                    value: signupState.formData.get('email')?.toString(),
-                    invalid: signupState.arePasswordsDifferent
+                    invalid: signupState.arePasswordsDifferent,
+                    invalidText: 'The password is different',
                 },
             ]}
-            submitButtonTitle="Create account"
-            formAction={signupAction}
             buttons={[
                 {
                     title: 'Back',

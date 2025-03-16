@@ -29,7 +29,7 @@ export async function signup(data: ISignUpRequest): Promise<ISignUpResponse> {
         }
         return response;
 
-    } else throw new Error("Failed to sign up.");
+    } else throw new Error(signUpRes.statusText);
 }
 
 export async function confirmSignUp(code: string): Promise<boolean> {

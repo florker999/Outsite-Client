@@ -19,7 +19,7 @@ export async function handleSignUpForm(prevState: ISignupFormState, formData: Fo
                 arePasswordsDifferent: true,
                 message: ''
             }
-            
+
             return nextState;
         }
         try {
@@ -33,9 +33,21 @@ export async function handleSignUpForm(prevState: ISignupFormState, formData: Fo
             return nextFormState;
 
         } catch (error) {
-            console.error("Failed to signup: ", error);
+            console.log("Read error:", error);
+            
+            if (error instanceof Error) {
+                if (error.message === "UsernameExistsException") {
+                    console.log("Failed to signup: " + error);
+                    return {
+                        message: '',
+                        doesUsernameExists: true,
+                        formData
+                    }
+                }
+            }
+            console.log("Failed to signup: ", error);
             return {
-                message: "Could not sign up.",
+                message: "UnknownException",
                 formData
             };
         }

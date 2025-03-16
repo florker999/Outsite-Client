@@ -7,4 +7,5 @@ export default interface ISignupFormState extends IFormState {
     destination?: string,
     medium?: TDeliveryMedium,
     arePasswordsDifferent?: boolean,
+    doesUsernameExists?: boolean,
 }
