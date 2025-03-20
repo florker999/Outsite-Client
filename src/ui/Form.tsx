@@ -19,6 +19,7 @@ interface IGeneralField<FormStructure> {
     required?: boolean,
     disabled?: boolean,
     type?: TFieldType,
+    onChange?: (value: string) => any,
 }
 
 interface IRadioField<FormStructure> extends IGeneralField<FormStructure> {
@@ -108,6 +109,7 @@ export default function Form<FormStructure>(props: IProps<FormStructure>) {
                                             defaultValue={field.value || props.formData?.get(field.key)?.toString()}
                                             type={field.type}
                                             padding={3}
+                                            onChange={e => field.onChange && field.onChange(e.currentTarget.value)}
                                         />
                                 }
                                 {field.invalidText &&

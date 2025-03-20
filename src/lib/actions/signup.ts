@@ -6,7 +6,6 @@ import { getSession, updateSession } from "../services/Cookie";
 import ISignUpRequest from "../models/ISignUpRequest";
 import { TDeliveryMedium } from "../models/TDeliveryMedium";
 import ISignupResponse from "../models/ISignupResponse copy";
-import { IConfirmSignUpRequest } from "../models/IConfirmSignUpRequest";
 
 export async function signup(data: ISignUpRequest): Promise<ISignUpResponse> {
     const signUpRes = await post('/signUp', data);

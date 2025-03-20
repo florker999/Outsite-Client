@@ -3,6 +3,9 @@
 import ISignupFormState from "@/lib/models/ISignupFormState";
 import Form from "./Form";
 import ISignupForm from "@/lib/models/forms/signupForm";
+import { toaster, Toaster } from "@/components/ui/toaster";
+import React from "react";
+import checkUsernameAvailability from "@/lib/actions/checkUsernameAvailalbility";
 
 interface IProps {
     signupState: ISignupFormState,
@@ -14,48 +17,61 @@ interface IProps {
 export default function RegisterForm(props: IProps) {
     const { signupState, signupAction, isSignupPending, closeForm } = props;
 
+    React.useEffect(() => {
+        if (signupState.message === 'UnknownException') {
+            toaster.create({
+                type: 'error',
+                title: 'Error encountered',
+                description: "Something went wrong. Try again!"
+            })
+        }
+    }, [signupState]);
     return (
-        <Form<ISignupForm>
-            title='Sign up form'
-            submitButtonTitle="Create account"
-            formAction={signupAction}
-            formData={signupState.formData}
-            disabled={isSignupPending}
-            fields={[
-                {
-                    title: 'Email',
-                    key: 'email',
-                    required: true,
-                },
-                {
-                    title: 'Username',
-                    key: 'username',
-                    required: true,
-                    invalid: signupState.doesUsernameExists,
-                    invalidText: signupState.doesUsernameExists ? "This username is not available." : ''
-                },
-                {
-                    title: 'Password',
-                    key: 'password',
-                    required: true,
-                    type: 'password',
-                    invalid: signupState.arePasswordsDifferent,
-                },
-                {
-                    title: 'Confirm password',
-                    key: 'confirmPassword',
-                    required: true,
-                    type: 'password',
-                    invalid: signupState.arePasswordsDifferent,
-                    invalidText: 'The password is different',
-                },
-            ]}
-            buttons={[
-                {
-                    title: 'Back',
-                    onClick: closeForm
-                }
-            ]}
-        />
+        <>
+            <Toaster />
+            <Form<ISignupForm>
+                title='Sign up form'
+                submitButtonTitle="Create account"
+                formAction={signupAction}
+                formData={signupState.formData}
+                disabled={isSignupPending}
+                fields={[
+                    {
+                        title: 'Email',
+                        key: 'email',
+                        required: true,
+                    },
+                    {
+                        title: 'Username',
+                        key: 'username',
+                        required: true,
+                        invalid: signupState.doesUsernameExists,
+                        invalidText: signupState.doesUsernameExists ? "This username is not available." : '',
+                        // onChange: value => checkUsernameAvailability(value)
+                    },
+                    {
+                        title: 'Password',
+                        key: 'password',
+                        required: true,
+                        type: 'password',
+                        invalid: signupState.arePasswordsDifferent,
+                    },
+                    {
+                        title: 'Confirm password',
+                        key: 'confirmPassword',
+                        required: true,
+                        type: 'password',
+                        invalid: signupState.arePasswordsDifferent,
+                        invalidText: 'The password is different',
+                    },
+                ]}
+                buttons={[
+                    {
+                        title: 'Back',
+                        onClick: closeForm
+                    }
+                ]}
+            />
+        </>
     );
 }
