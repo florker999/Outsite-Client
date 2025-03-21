@@ -5,7 +5,7 @@ import Form from "./Form";
 import ISignupForm from "@/lib/models/forms/signupForm";
 import { toaster, Toaster } from "@/components/ui/toaster";
 import React from "react";
-import checkUsernameAvailability from "@/lib/actions/checkUsernameAvailalbility";
+import { PasswordAssessorBuilder } from "@/lib/utils/ValueAssessor";
 
 interface IProps {
     signupState: ISignupFormState,
@@ -16,6 +16,7 @@ interface IProps {
 
 export default function RegisterForm(props: IProps) {
     const { signupState, signupAction, isSignupPending, closeForm } = props;
+    const passwordAssessor = React.useRef(PasswordAssessorBuilder.build()).current;
 
     React.useEffect(() => {
         if (signupState.message === 'UnknownException') {
@@ -26,6 +27,7 @@ export default function RegisterForm(props: IProps) {
             })
         }
     }, [signupState]);
+
     return (
         <>
             <Toaster />
@@ -55,6 +57,10 @@ export default function RegisterForm(props: IProps) {
                         required: true,
                         type: 'password',
                         invalid: signupState.arePasswordsDifferent,
+                        strengthIndicatorOptions: {
+                            max: 4,
+                            assessor: passwordAssessor,
+                        }
                     },
                     {
                         title: 'Confirm password',
