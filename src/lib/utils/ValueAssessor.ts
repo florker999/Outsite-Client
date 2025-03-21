@@ -34,17 +34,19 @@ export class PasswordAssessorBuilder {
         },
             digitConstraint: IConstraint = {
                 isFulfilled: value => (value.match(/\d+/) !== null),
-                reward: 3
             },
             capitalLetterConstraint: IConstraint = {
                 isFulfilled: value => (value.match(/[A-Z]+/) !== null),
-                reward: 5
+            },
+            otherCharacterConstraint: IConstraint = {
+                isFulfilled: value => (value.match(/\W+/) !== null)
             };
 
         const constraints: IConstraint[] = [
             lengthConstraint,
             digitConstraint,
-            capitalLetterConstraint
+            capitalLetterConstraint,
+            otherCharacterConstraint,
         ];
         const assessor = new ValueAssessor(constraints);
         return assessor;
