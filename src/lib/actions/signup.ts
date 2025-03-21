@@ -31,7 +31,7 @@ export async function signup(data: ISignUpRequest): Promise<ISignUpResponse> {
     } else throw new Error(signUpRes.statusText);
 }
 
-export async function confirmSignUp(code: string): Promise<boolean> {
+export async function confirmSignUp(code: string): Promise<void> {
     const { username, session } = await getSession();
     const confirmationRequest = {
         code,
@@ -41,10 +41,9 @@ export async function confirmSignUp(code: string): Promise<boolean> {
 
     const confRes = await post('/confirmSignUp', confirmationRequest);
     if (confRes.ok) {
-        return true;
+        return;
 
     } else {
-        console.error("Failed to confirm sign up.");
-        return false;
+        throw Error(confRes.statusText);
     }
 }

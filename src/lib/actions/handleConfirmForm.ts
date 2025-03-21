@@ -17,11 +17,19 @@ export async function handleConfirmForm(prevState: IFormState, formData: FormDat
     if (formIsValid) {
         const confirmForm: IConfirmForm = extractFormFields(formData);
         try {
-            const confirmRes = await confirmSignUp(confirmForm.code);
+            await confirmSignUp(confirmForm.code);
             await updateSession({ isLoggedIn: true });
 
         } catch (error) {
             console.error("Failed to confirm sing up: ", error);
+
+            if (error instanceof Error) {
+                return {
+                    message: error.message,
+                    formData
+                }
+            }
+
             return {
                 message: "Could not confirm sing up.",
                 formData
@@ -29,7 +37,6 @@ export async function handleConfirmForm(prevState: IFormState, formData: FormDat
         }
 
         redirect('/');
-        return { message: '', formData: new FormData() };
     }
 
     return {

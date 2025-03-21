@@ -93,6 +93,8 @@ export default function Page(props: IProps) {
                             key: 'code',
                             required: true,
                             disabled: isConfirmPending,
+                            invalid: !!confirmState.message,
+                            invalidText: confirmState.message === 'CodeMismatchException' ? 'Code incorrect' : 'Error'
                         }
                     ]}
                     submitButtonTitle={"Send code"}
