@@ -2,7 +2,7 @@
 
 import { PasswordInput, PasswordStrengthMeter } from "@/components/ui/password-input";
 import ValueAssessor from "@/lib/utils/ValueAssessor";
-import { Fieldset, Field, Input, Stack, Button, Container, FieldErrorText, RadioCard, For, HStack } from "@chakra-ui/react";
+import { Fieldset, Field, Input, Stack, Button, Container, FieldErrorText, RadioCard, For, HStack, HoverCard } from "@chakra-ui/react";
 import React, { JSX } from "react";
 
 interface IRadioChoices {
@@ -67,6 +67,7 @@ interface IProps<FormStructure> {
 export default function Form<FormStructure>(props: IProps<FormStructure>) {
     const { title, description, fields, submitButtonTitle, buttons, formAction, disabled } = props;
     const [passwordStrength, setPasswordStrength] = React.useState(0);
+    const [isPasswordManualVisible, setIsPasswordManualVisible] = React.useState(false);
 
     return (
         <Container padding={5}>
@@ -92,12 +93,23 @@ export default function Form<FormStructure>(props: IProps<FormStructure>) {
                                 </Field.Label>
                                 {field.type === 'password' ?
                                     <>
-                                        <PasswordInput
-                                            name={field.key}
-                                            defaultValue={field.value}
-                                            padding={3}
-                                            onChange={e => field.strengthIndicatorOptions ? setPasswordStrength(field.strengthIndicatorOptions.assessor.assess(e.currentTarget.value)) : undefined}
-                                        />
+                                        <HoverCard.Root open={isPasswordManualVisible}>
+                                            <HoverCard.Trigger asChild>
+                                                <PasswordInput
+                                                    name={field.key}
+                                                    defaultValue={field.value}
+                                                    padding={3}
+                                                    onChange={e => field.strengthIndicatorOptions ? setPasswordStrength(field.strengthIndicatorOptions.assessor.assess(e.currentTarget.value)) : undefined}
+                                                    onFocus={() => setIsPasswordManualVisible(true)}
+                                                    onBlur={() => setIsPasswordManualVisible(false)}
+                                                />
+                                            </HoverCard.Trigger>
+                                            <HoverCard.Positioner>
+                                                <HoverCard.Content>
+                                                    Constraints:
+                                                </HoverCard.Content>
+                                            </HoverCard.Positioner>
+                                        </HoverCard.Root>
                                         {field.strengthIndicatorOptions &&
                                             <PasswordStrengthMeter
                                                 max={field.strengthIndicatorOptions.assessor.maxAssessment}
