@@ -47,3 +47,15 @@ export async function confirmSignUp(code: string): Promise<void> {
         throw Error(confRes.statusText);
     }
 }
+
+export async function resendCode(): Promise<void> {
+    const { username } = await getSession();
+    const resendCodeRequest = { username };
+    const confRes = await post('/resendCode', resendCodeRequest);
+    if (confRes.ok) {
+        return;
+
+    } else {
+        throw Error(confRes.statusText);
+    }
+}

@@ -2,7 +2,7 @@
 
 import { TDeliveryMedium } from "@/lib/models/TDeliveryMedium";
 import Form from "@/ui/Form";
-import { Alert, Center, Container, Text } from "@chakra-ui/react"
+import { Alert, Center, Container, Stack, Text } from "@chakra-ui/react"
 import React from "react";
 import { handleSignUpForm } from "@/lib/actions/handleSignUpForm";
 import { handleLogInForm } from "@/lib/actions/handleLogInForm";
@@ -13,6 +13,7 @@ import ISignupFormState from "@/lib/models/ISignupFormState";
 import { handleConfirmForm } from "@/lib/actions/handleConfirmForm";
 import RegisterForm from "@/ui/RegisterForm";
 import ConfirmSignUpError from "@/lib/utils/ConfirmSignUpError";
+import { resendCode } from "@/lib/actions/signup";
 
 interface IProps {
 
@@ -88,18 +89,24 @@ export default function Page(props: IProps) {
             display = (
                 <Form
                     title={`An email has been sent to you at ${signupState.destination}. Don't hesitate too long & enter the code from the message in the field below.`}
+                    formAction={confirmAction}
+                    submitButtonTitle={"Send code"}
+                    buttons={confirmState.error === undefined ? undefined : [
+                        {
+                            title: "Resend code",
+                            onClick: () => resendCode()
+                        }
+                    ]}
                     fields={[
                         {
                             title: 'Code',
                             key: 'code',
                             required: true,
                             disabled: isConfirmPending,
-                            invalid: !!confirmState.error,
+                            invalid: confirmState.error !== undefined,
                             invalidText: confirmState.error === undefined ? '' : confirmState.error === ConfirmSignUpError.IncorrectCode ? 'Code incorrect' : confirmState.error === ConfirmSignUpError.ExpiredCode ? "Code has expired" : "Something went wrong..."
                         }
                     ]}
-                    submitButtonTitle={"Send code"}
-                    formAction={confirmAction}
                 />
             )
         } else {
