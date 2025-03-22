@@ -5,6 +5,7 @@ import IFormState from "../models/IFormState";
 import { updateSession } from "../services/Cookie";
 import validateForm from "../utils/validateForm";
 import { confirmSignUp } from "./signup";
+import ConfirmSignUpError from "../utils/ConfirmSignUpError";
 
 interface IConfirmForm {
     code: string,
@@ -24,16 +25,26 @@ export async function handleConfirmForm(prevState: IFormState, formData: FormDat
             console.error("Failed to confirm sing up: ", error);
 
             if (error instanceof Error) {
-                return {
-                    message: error.message,
-                    formData
+                if (error.message === 'CodeMismatchException') {
+                    return {
+                        error: ConfirmSignUpError.IncorrectCode,
+                        message: '',
+                        formData,
+                    }
+                } else if (error.message === 'ExpiredCodeException') {
+                    return {
+                        error: ConfirmSignUpError.ExpiredCode,
+                        message: '',
+                        formData,
+                    }
                 }
             }
 
             return {
-                message: "Could not confirm sing up.",
-                formData
-            };
+                error: ConfirmSignUpError.Undefined,
+                message: '',
+                formData,
+            }
         }
 
         redirect('/');

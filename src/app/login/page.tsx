@@ -12,6 +12,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import ISignupFormState from "@/lib/models/ISignupFormState";
 import { handleConfirmForm } from "@/lib/actions/handleConfirmForm";
 import RegisterForm from "@/ui/RegisterForm";
+import ConfirmSignUpError from "@/lib/utils/ConfirmSignUpError";
 
 interface IProps {
 
@@ -93,8 +94,8 @@ export default function Page(props: IProps) {
                             key: 'code',
                             required: true,
                             disabled: isConfirmPending,
-                            invalid: !!confirmState.message,
-                            invalidText: confirmState.message === 'CodeMismatchException' ? 'Code incorrect' : 'Error'
+                            invalid: !!confirmState.error,
+                            invalidText: confirmState.error === undefined ? '' : confirmState.error === ConfirmSignUpError.IncorrectCode ? 'Code incorrect' : confirmState.error === ConfirmSignUpError.ExpiredCode ? "Code has expired" : "Something went wrong..."
                         }
                     ]}
                     submitButtonTitle={"Send code"}
