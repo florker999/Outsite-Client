@@ -91,6 +91,7 @@ export default function Page(props: IProps) {
                     title={`An email has been sent to you at ${signupState.destination}. Don't hesitate too long & enter the code from the message in the field below.`}
                     formAction={confirmAction}
                     submitButtonTitle={"Send code"}
+                    loading={isConfirmPending}
                     buttons={confirmState.error === undefined ? undefined : [
                         {
                             title: "Resend code",

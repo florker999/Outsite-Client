@@ -37,6 +37,7 @@ export default function RegisterForm(props: IProps) {
                 formAction={signupAction}
                 formData={signupState.formData}
                 disabled={isSignupPending}
+                loading={isSignupPending}
                 fields={[
                     {
                         title: 'Email',

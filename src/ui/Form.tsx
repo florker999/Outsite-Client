@@ -61,11 +61,12 @@ interface IProps<FormStructure> {
     buttons?: IButton[],
     formAction: string | ((formData: FormData) => void | Promise<void>),
     disabled?: boolean,
+    loading?: boolean,
     formData?: FormData,
 }
 
 export default function Form<FormStructure>(props: IProps<FormStructure>) {
-    const { title, description, fields, submitButtonTitle, buttons, formAction, disabled } = props;
+    const { title, description, fields, submitButtonTitle, buttons, formAction, disabled, loading } = props;
     const [passwordStrength, setPasswordStrength] = React.useState(0);
     const [isPasswordManualVisible, setIsPasswordManualVisible] = React.useState(false);
 
@@ -159,6 +160,7 @@ export default function Form<FormStructure>(props: IProps<FormStructure>) {
                             w={'auto'}
                             type='submit'
                             p={5}
+                            loading={loading}
                         >
                             {submitButtonTitle}
                         </Button>
