@@ -1,4 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Outsite
+
+Welcome to Outsite, a platform designed for hobby enthusiasts to manage, document, and celebrate their passions. Whether you're into photography, painting, coding, gardening, or anything in between, Outsite provides the tools to track your progress, share your journey, and connect with your interests.
+
+Initially focused on creating a user-friendly login and registration experience, Outsite's vision is to become a comprehensive hub for individuals to truly grow their hobbies by adding posts, documenting achievements, and fostering a sense of accomplishment.
+
+<div style="overflow-x: auto; white-space: nowrap;">
+  <img src="public/preview/login.png" alt="Preview 1" style="width: auto; height: 200px; margin-right: 10px;">
+  <img src="public/preview/signup.png" alt="Preview 2" style="width: auto; height: 200px; margin-right: 10px;">
+  <img src="public/preview/hobby.png" alt="Preview 3" style="width: auto; height: 200px; margin-right: 10px;">
+</div>
+
+## Technologies Used
+
+* **Next.js:** The React framework for production, enabling features like server-side rendering and routing.
+* **TypeScript:** A superset of JavaScript that adds static typing, improving code maintainability and developer experience.
+* **Chakra UI:** A simple, modular, and accessible component library that provides building blocks for a fast and consistent user interface.
 
 ## Getting Started
 
