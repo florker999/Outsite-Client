@@ -2,6 +2,8 @@
 
 Welcome to Outsite, a platform designed for hobby enthusiasts to manage, document, and celebrate their passions. Whether you're into photography, painting, coding, gardening, or anything in between, Outsite provides the tools to track your progress, share your journey, and connect with your interests.
 
+Try at: https://main.d10p6mq6g0041c.amplifyapp.com
+
 Initially focused on creating a user-friendly login and registration experience, Outsite's vision is to become a comprehensive hub for individuals to truly grow their hobbies by adding posts, documenting achievements, and fostering a sense of accomplishment.
 
 <div style="overflow-x: auto; white-space: nowrap;">
